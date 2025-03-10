@@ -36,7 +36,7 @@ jobs:
       - name: Pack Font
         run: |
           cd $GITHUB_WORKSPACE
-          mv character bmp
+          mv characters bmp
           wget https://raw.githubusercontent.com/amazfitbip/tools/refs/heads/master/bipfont.py
           python3 bipfont.py pack AmazfitBipFont.ft
 
