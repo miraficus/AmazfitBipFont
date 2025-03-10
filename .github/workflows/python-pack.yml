@@ -1,0 +1,59 @@
+name: python-pack
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload_artifact:
+        description: "Upload Artifact"
+        default: true
+        required: false
+        type: boolean
+      release:
+        description: "Release as draft"
+        default: false
+        required: false
+        type: boolean
+        
+jobs:
+
+  python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt -yq update
+          sudo apt -yq install git zip wget curl python3
+          python3 --version
+
+      - name: Pack Font
+        run: |
+          cd $GITHUB_WORKSPACE
+          mv character bmp
+          wget https://raw.githubusercontent.com/amazfitbip/tools/refs/heads/master/bipfont.py
+          python3 bipfont.py pack AmazfitBipFont.ft
+
+
+      - name: Upload Artifact
+        if: ${{ inputs.upload_artifact }}
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: AmazfitBipFont-build-${{ github.run_number }}
+          path: AmazfitBipFont.ft
+            
+      - name: Release
+        if: ${{ inputs.release }}
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: 1.0.0
+          name: AmazfitBipFont
+          files: AmazfitBipFont.ft
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: true
