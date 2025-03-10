@@ -30,8 +30,10 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt -yq update
-          sudo apt -yq install git zip wget curl python3
+          sudo apt -yq install git zip wget curl python3 python3-pip
           python3 --version
+          pip list
+          pip install Pillow
 
       - name: Pack Font
         run: |
